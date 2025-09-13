@@ -4,5 +4,5 @@ namespace TravelAgent_FlightAPI.Processors.Interfaces;
 
 public interface IGetOfferProcessor
 {
-    Task<Result<AmadeusFlightOffer>> Process(string request);
+    Task<Result<GetFlightOfferResponse>> Process(string request);
 }

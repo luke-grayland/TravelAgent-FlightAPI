@@ -9,29 +9,29 @@ using TravelAgent_FlightAPI.Utilities;
 
 namespace TravelAgent_FlightAPI.Processors;
 
-public class GetOfferProcessor(IRequestAssembler requestAssembler, 
-    IFlightOfferRepository flightOfferRepository, ITokenRepository tokenRepository) : IGetOfferProcessor
+public class GetOfferProcessor(IRequestAssembler requestAssembler, IFlightOfferRepository flightOfferRepository, 
+    ITokenRepository tokenRepository, IResponseAssembler responseAssembler) : IGetOfferProcessor
 {
-    public async Task<Result<AmadeusFlightOffer>> Process(string rawRequestBody)
+    public async Task<Result<GetFlightOfferResponse>> Process(string rawRequestBody)
     {
         //Deserialise request
         if(string.IsNullOrEmpty(rawRequestBody)) 
-            return Result<AmadeusFlightOffer>.Failure("Request body empty");
+            return Result<GetFlightOfferResponse>.Failure("Request body empty");
         
         var request = JsonSerializer.Deserialize<GetFlightOfferRequest>(rawRequestBody);
         
         if (request == null)
-            return Result<AmadeusFlightOffer>.Failure("Unable to deserialise request body");
+            return Result<GetFlightOfferResponse>.Failure("Unable to deserialise request body");
         
         //Validate request
         if (request.DepartureDate < DateTime.UtcNow)
-            return Result<AmadeusFlightOffer>.Failure("Departure Date cannot be in the past");
+            return Result<GetFlightOfferResponse>.Failure("Departure Date cannot be in the past");
 
         if (request.ReturnDate < request.DepartureDate)
-            return Result<AmadeusFlightOffer>.Failure("Return Date cannot be before Departure Date");
+            return Result<GetFlightOfferResponse>.Failure("Return Date cannot be before Departure Date");
         
         if(!TravelClass.All.Contains(request.TravelClass))
-            return Result<AmadeusFlightOffer>.Failure("Invalid Travel Class");
+            return Result<GetFlightOfferResponse>.Failure("Invalid Travel Class");
 
         //Assemble Amadeus request
         var amadeusOfferRequest = requestAssembler.AssembleFlightSearchRequest(request);
@@ -43,15 +43,15 @@ public class GetOfferProcessor(IRequestAssembler requestAssembler,
         var accessTokenResponse = await tokenRepository.GetToken(baseUrl);
         if (string.IsNullOrEmpty(accessTokenResponse?.AccessToken)) throw new Exception("Unable to retrieve access token");
         
+        var flightOfferEndpoint = $"https://{baseUrl}/v2/shopping/flight-offers";
         var flightSearchResponse = await flightOfferRepository
-            .PostAsync<FlightSearchRequest, FlightSearchResponse>(baseUrl, amadeusOfferRequest, accessTokenResponse.AccessToken); 
+            .PostAsync<FlightSearchRequest, FlightSearchResponse>(flightOfferEndpoint, amadeusOfferRequest, accessTokenResponse.AccessToken); 
         
         //Handle response
-        if(flightSearchResponse == null)
-            throw new Exception("Unable to deserialise response from Amadeus");
+        if(flightSearchResponse == null) throw new Exception("Unable to deserialise response from Amadeus");
+
+        var response = responseAssembler.AssembleResponse(flightSearchResponse); 
         
-        
-        
-        return Result<AmadeusFlightOffer>.Success(new AmadeusFlightOffer());
+        return Result<GetFlightOfferResponse>.Success(response);
     }
 }

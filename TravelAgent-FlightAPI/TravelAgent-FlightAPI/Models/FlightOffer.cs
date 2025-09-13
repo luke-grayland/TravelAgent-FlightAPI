@@ -4,6 +4,9 @@ namespace TravelAgent_FlightAPI.Models;
 
 public class FlightOffer
 {
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = string.Empty;
+    
     [JsonPropertyName("originAirportCode")]
     public string OriginAirportCode { get; set; } = string.Empty;
     
@@ -13,8 +16,8 @@ public class FlightOffer
     [JsonPropertyName("departureDate")]
     public DateTime DepartureDate { get; set; }
     
-    [JsonPropertyName("returnDate")]
-    public DateTime ReturnDate { get; set; }
+    [JsonPropertyName("arrivalDate")]
+    public DateTime ArrivalDate { get; set; }
     
     [JsonPropertyName("travelClass")]
     public string TravelClass { get; set; } = string.Empty;

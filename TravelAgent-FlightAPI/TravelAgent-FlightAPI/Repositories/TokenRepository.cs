@@ -19,7 +19,7 @@ public class TokenRepository(HttpClient httpClient) : ITokenRepository
         var clientSecret = Environment.GetEnvironmentVariable(ConfigKeyNames.AmadeusApiSecret);
         if (string.IsNullOrEmpty(clientSecret)) throw new Exception("Unable to read AmadeusApiSecret config value");
         
-        var endpoint = $"{baseUrl}/v1/security/oauth2/token";
+        var endpoint = $"https://{baseUrl}/v1/security/oauth2/token";
         
         var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
         {

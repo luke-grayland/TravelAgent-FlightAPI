@@ -2,7 +2,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TravelAgent_FlightAPI.Models;
 using TravelAgent_FlightAPI.Processors.Interfaces;
 
 namespace TravelAgent_FlightAPI;

@@ -9,7 +9,7 @@ public class FlightSearchResponse
     public Meta Meta { get; set; }
 
     [JsonPropertyName("data")]
-    public List<AmadeusFlightOffer> Data { get; set; }
+    public List<AmadeusFlightOffer> FlightOffers { get; set; }
 
     [JsonPropertyName("dictionaries")]
     public Dictionaries Dictionaries { get; set; }
