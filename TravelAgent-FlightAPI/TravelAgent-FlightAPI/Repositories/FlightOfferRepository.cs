@@ -32,7 +32,6 @@ public class FlightOfferRepository(HttpClient httpClient) : IFlightOfferReposito
                 return JsonSerializer.Deserialize<TResponse>(responseString, _jsonOptions);
             }
 
-            // Handle common errors
             switch ((int)response.StatusCode)
             {
                 case 400:

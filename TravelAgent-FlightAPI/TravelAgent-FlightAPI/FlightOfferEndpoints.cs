@@ -10,13 +10,13 @@ namespace TravelAgent_FlightAPI;
 public class FlightOfferEndpoints(ILogger<FlightOfferEndpoints> logger, IGetOfferProcessor getOfferProcessor)
 {
     [Function("GetFlightOffer")]
-    public async Task<IActionResult> GetFlightOffer([HttpTrigger(AuthorizationLevel.Function, "get", 
+    public async Task<IActionResult> GetFlightOffer([HttpTrigger(AuthorizationLevel.Function, "post", 
         Route = "flightOffer")] HttpRequest req)
     {
         try
         {
             using var reader = new StreamReader(req.Body);
-            var requestBody = reader.ReadToEnd();
+            var requestBody = await reader.ReadToEndAsync();
             logger.LogInformation($"Request received: {requestBody}");
 
             var result = await getOfferProcessor.Process(requestBody);
@@ -34,13 +34,4 @@ public class FlightOfferEndpoints(ILogger<FlightOfferEndpoints> logger, IGetOffe
             return new ObjectResult("Something went wrong!") {StatusCode = 500 };
         }
     }
-    
-    [Function("CreateFlightOffer")]
-    public IActionResult CreateFlightOffer([HttpTrigger(AuthorizationLevel.Function, "post", 
-        Route = "flightOffer")] HttpRequest req)
-    {
-        logger.LogError("CreateFlightOffer endpoint not implemented.");
-        return new BadRequestObjectResult("Method not implemented");
-    }
-
 }

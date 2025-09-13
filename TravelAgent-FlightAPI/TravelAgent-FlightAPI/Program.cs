@@ -9,9 +9,11 @@ using TravelAgent_FlightAPI.Repositories.Interfaces;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<IGetOfferProcessor, GetOfferProcessor>();
 builder.Services.AddScoped<IRequestAssembler, RequestAssembler>();
 builder.Services.AddScoped<IFlightOfferRepository, FlightOfferRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 builder.ConfigureFunctionsWebApplication();
 
