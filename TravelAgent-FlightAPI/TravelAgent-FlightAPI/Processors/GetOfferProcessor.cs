@@ -5,12 +5,13 @@ using TravelAgent_FlightAPI.Models;
 using TravelAgent_FlightAPI.Models.Amadeus;
 using TravelAgent_FlightAPI.Processors.Interfaces;
 using TravelAgent_FlightAPI.Repositories.Interfaces;
+using TravelAgent_FlightAPI.Services.Interfaces;
 using TravelAgent_FlightAPI.Utilities;
 
 namespace TravelAgent_FlightAPI.Processors;
 
 public class GetOfferProcessor(IRequestAssembler requestAssembler, IFlightOfferRepository flightOfferRepository, 
-    ITokenRepository tokenRepository, IResponseAssembler responseAssembler) : IGetOfferProcessor
+    ITokenRepository tokenRepository, IResponseAssembler responseAssembler, IMemCacheService memCacheService) : IGetOfferProcessor
 {
     public async Task<Result<GetFlightOfferResponse>> Process(string rawRequestBody)
     {
@@ -36,16 +37,25 @@ public class GetOfferProcessor(IRequestAssembler requestAssembler, IFlightOfferR
         //Assemble Amadeus request
         var amadeusOfferRequest = requestAssembler.AssembleFlightSearchRequest(request);
 
-        //Obtain access token & send request
         var baseUrl = Environment.GetEnvironmentVariable(ConfigKeyNames.AmadeusBaseUrl);
         if (string.IsNullOrEmpty(baseUrl)) throw new Exception("Unable to read base URL config value");
         
-        var accessTokenResponse = await tokenRepository.GetToken(baseUrl);
-        if (string.IsNullOrEmpty(accessTokenResponse?.AccessToken)) throw new Exception("Unable to retrieve access token");
+        //Obtain access token
+        var accessToken = memCacheService.GetAccessToken();
         
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            var accessTokenResponse = await tokenRepository.GetToken(baseUrl);
+            if (string.IsNullOrEmpty(accessTokenResponse?.AccessToken)) throw new Exception("Unable to retrieve access token");
+
+            memCacheService.SetAccessToken(accessTokenResponse.AccessToken, accessTokenResponse.ExpiresIn);
+            accessToken = accessTokenResponse.AccessToken;
+        }
+        
+        //Send flight offer request to Amadeus
         var flightOfferEndpoint = $"https://{baseUrl}/v2/shopping/flight-offers";
         var flightSearchResponse = await flightOfferRepository
-            .PostAsync<FlightSearchRequest, FlightSearchResponse>(flightOfferEndpoint, amadeusOfferRequest, accessTokenResponse.AccessToken); 
+            .PostAsync<FlightSearchRequest, FlightSearchResponse>(flightOfferEndpoint, amadeusOfferRequest, accessToken); 
         
         //Handle response
         if(flightSearchResponse == null) throw new Exception("Unable to deserialise response from Amadeus");

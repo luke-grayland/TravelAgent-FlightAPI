@@ -6,15 +6,20 @@ using TravelAgent_FlightAPI.Processors;
 using TravelAgent_FlightAPI.Processors.Interfaces;
 using TravelAgent_FlightAPI.Repositories;
 using TravelAgent_FlightAPI.Repositories.Interfaces;
+using TravelAgent_FlightAPI.Services;
+using TravelAgent_FlightAPI.Services.Interfaces;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<IGetOfferProcessor, GetOfferProcessor>();
 builder.Services.AddScoped<IRequestAssembler, RequestAssembler>();
 builder.Services.AddScoped<IFlightOfferRepository, FlightOfferRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IResponseAssembler, ResponseAssembler>();
+builder.Services.AddScoped<IMemCacheService, MemCacheService>();
 
 builder.ConfigureFunctionsWebApplication();
 
