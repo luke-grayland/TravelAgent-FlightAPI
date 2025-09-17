@@ -2,6 +2,7 @@ using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TravelAgent_FlightAPI.Assemblers;
+using TravelAgent_FlightAPI.Assemblers.Interfaces;
 using TravelAgent_FlightAPI.Processors;
 using TravelAgent_FlightAPI.Processors.Interfaces;
 using TravelAgent_FlightAPI.Repositories;

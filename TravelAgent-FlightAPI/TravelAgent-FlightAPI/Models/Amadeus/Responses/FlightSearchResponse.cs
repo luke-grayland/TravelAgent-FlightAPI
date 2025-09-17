@@ -93,7 +93,7 @@ public class AmadeusFlightOffer
     public bool PaymentCardRequired { get; set; }
 
     [JsonPropertyName("lastTicketingDate")]
-    public string LastTicketingDate { get; set; }
+    public string? LastTicketingDate { get; set; }
 
     [JsonPropertyName("lastTicketingDateTime")]
     public DateTime? LastTicketingDateTime { get; set; }
@@ -123,7 +123,7 @@ public class Itinerary
     public string Duration { get; set; }
 
     [JsonPropertyName("segments")]
-    public List<Segment> Segments { get; set; }
+    public List<Segment> Segments { get; set; } = [];
 }
 
 public class Segment
@@ -158,6 +158,7 @@ public class Segment
     [JsonPropertyName("operating")]
     public OperatingFlight Operating { get; set; }
 
+    //Duration in ISO8601 PnYnMnDTnHnMnS format, example: PT2H10M
     [JsonPropertyName("duration")]
     public string Duration { get; set; }
 

@@ -24,6 +24,17 @@ public class RequestAssembler : IRequestAssembler
                     Date = request.DepartureDate.Date.ToString("yyyy-MM-dd"),
                     Time = request.DepartureDate.ToString("HH:mm:ss")
                 }
+            },
+            new OriginDestination
+            {
+                Id = "2",
+                OriginLocationCode = request.DestinationAirportCode,
+                DestinationLocationCode = request.OriginAirportCode,
+                DepartureDateTimeRange = new DateTimeRange()
+                {
+                    Date = request.ReturnDate.Date.ToString("yyyy-MM-dd"),
+                    Time = request.ReturnDate.ToString("HH:mm:ss")
+                }
             }
         ];
 

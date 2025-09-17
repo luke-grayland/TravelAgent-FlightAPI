@@ -22,7 +22,7 @@ public class FlightOfferEndpoints(ILogger<FlightOfferEndpoints> logger, IGetOffe
 
             if (result.IsSuccess)
             {
-                return new OkObjectResult("Done");
+                return new OkObjectResult(result.Data);
             }
 
             return new ObjectResult(result.ErrorMessage) { StatusCode = 400 };

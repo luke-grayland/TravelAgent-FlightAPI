@@ -1,5 +1,6 @@
 using System.Text.Json;
 using TravelAgent_FlightAPI.Assemblers;
+using TravelAgent_FlightAPI.Assemblers.Interfaces;
 using TravelAgent_FlightAPI.Constants;
 using TravelAgent_FlightAPI.Models;
 using TravelAgent_FlightAPI.Models.Amadeus;

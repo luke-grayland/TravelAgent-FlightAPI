@@ -5,5 +5,5 @@ namespace TravelAgent_FlightAPI.Models;
 public class GetFlightOfferResponse
 {
     [JsonPropertyName("flightOffers")] 
-    public List<FlightOffer> FlightOffers { get; set; } = [];
+    public List<WaypointFlightOffer> FlightOffers { get; set; } = [];
 }
