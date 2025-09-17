@@ -53,6 +53,10 @@ public class RequestAssembler : IRequestAssembler
             MaxFlightOffers = 3,
             FlightFilters = new FlightFilters()
             {
+                ConnectionRestriction = new ConnectionRestriction()
+                {
+                    NonStopPreferred = true
+                },
                 CabinRestrictions =
                 [
                     new CabinRestriction()

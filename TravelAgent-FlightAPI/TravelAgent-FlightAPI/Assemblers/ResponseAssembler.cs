@@ -40,7 +40,7 @@ public class ResponseAssembler : IResponseAssembler
                 foreach (var segment in itinerary.Segments)
                 {
                     var waypointSegment = new WaypointSegment();
-                    waypointSegment.Id = segment.Id;
+                    waypointSegment.LegId = segment.Id;
                     waypointSegment.Departure.At = segment.Departure.At;
                     waypointSegment.Departure.Terminal = segment.Departure.Terminal;
                     waypointSegment.Departure.AirportCode = segment.Departure.IataCode;

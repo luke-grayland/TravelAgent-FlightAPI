@@ -37,8 +37,8 @@ public class WaypointItinerary
 
 public class WaypointSegment
 {
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = string.Empty;
+    [JsonPropertyName("legId")]
+    public string LegId { get; set; } = string.Empty;
 
     [JsonPropertyName("departure")]
     public WaypointFlightEndPoint Departure { get; set; } = new();
